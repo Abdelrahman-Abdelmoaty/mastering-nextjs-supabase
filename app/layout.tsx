@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import QueryProvider from "@/contexts/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "@/contexts/CartProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +21,10 @@ export default function RootLayout({
 		<html lang="en" className="scroll-smooth">
 			<body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
 				<QueryProvider>
-					<div className="flex-1 grid">{children}</div>
-					<Toaster richColors />
+					<CartProvider>
+						<div className="flex-1 grid">{children}</div>
+						<Toaster richColors />
+					</CartProvider>
 				</QueryProvider>
 			</body>
 		</html>

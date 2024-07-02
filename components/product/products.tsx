@@ -9,7 +9,7 @@ import {
 	DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDownIcon } from "lucide-react";
+import { ArrowUpDownIcon, PackageSearch, Search } from "lucide-react";
 import ProductCard from "./product-card";
 import Product from "@/types/product";
 import { useIntersectionObserver } from "usehooks-ts";
@@ -21,19 +21,25 @@ export default function Products({ products: initialProducts }: { products: Prod
 	const [products, setProducts] = useState(initialProducts);
 
 	const [sortBy, setSortBy] = useState("featured");
+	const [query, setQuery] = useState("");
 
 	const filteredProducts = useMemo(() => {
-		return products.sort((a, b) => {
-			switch (sortBy) {
-				case "price-asc":
-					return a.price - b.price;
-				case "price-desc":
-					return b.price - a.price;
-				default:
-					return 0;
-			}
-		});
-	}, [products, sortBy]);
+		return products
+			.sort((a, b) => {
+				switch (sortBy) {
+					case "price-asc":
+						return a.price - b.price;
+					case "price-desc":
+						return b.price - a.price;
+					default:
+						return 0;
+				}
+			})
+			.filter((product) => {
+				if (!query) return true;
+				return product.name.toLowerCase().includes(query.toLowerCase());
+			});
+	}, [products, sortBy, query]);
 
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
@@ -73,10 +79,12 @@ export default function Products({ products: initialProducts }: { products: Prod
 					</div>
 					<div className="flex flex-col sm:flex-row items-center gap-4 w-full">
 						<div className="relative flex-1">
-							<div className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+							<Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 							<Input
 								type="search"
 								placeholder="Search products..."
+								value={query}
+								onChange={(e) => setQuery(e.target.value)}
 								className="w-full rounded-lg bg-background pl-8 md:w-[300px] lg:w-[400px]"
 							/>
 						</div>
@@ -112,6 +120,14 @@ export default function Products({ products: initialProducts }: { products: Prod
 						</DropdownMenu>
 					</div>
 				</div>
+				{!filteredProducts.length && (
+					<div className="flex flex-col gap-6 items-center my-32">
+						<PackageSearch className="w-16 h-16 text-muted-foreground" />
+						<p className="text-xl font-semibold uppercase text-muted-foreground">
+							No products found
+						</p>
+					</div>
+				)}
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
 					{filteredProducts.map((product) => (
 						<ProductCard key={product.id} product={product} />

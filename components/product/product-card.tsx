@@ -3,15 +3,16 @@ import Link from "next/link";
 import { ShoppingCartIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Product from "@/types/product";
+import AddToCartButton from "./add-to-cart-button";
 
 export default function ProductCard({ product }: { product: Product }) {
 	return (
 		<div className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2 flex flex-col">
-			<Link href="#" className="absolute inset-0 z-10" prefetch={false}>
+			{/* <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
 				<span className="sr-only">View {product.name}</span>
-			</Link>
+			</Link> */}
 			<Image
-				src="/placeholder.svg"
+				src={product.image}
 				alt={product.name}
 				width={500}
 				height={400}
@@ -24,10 +25,7 @@ export default function ProductCard({ product }: { product: Product }) {
 				</p>
 				<div className="flex items-center justify-between mt-2">
 					<h4 className="text-lg font-semibold">${product.price}</h4>
-					<Button size="sm">
-						<ShoppingCartIcon className="w-4 h-4 mr-2" />
-						Add to Cart
-					</Button>
+					<AddToCartButton product={product} />
 				</div>
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { LoaderCircle } from "lucide-react";
 
 export default function LoadingSpinner({ className }: { className?: string }) {
