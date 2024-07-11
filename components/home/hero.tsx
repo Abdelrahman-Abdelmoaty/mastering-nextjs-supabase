@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Hero() {
 	return (
-		<section className="w-full py-6 container">
+		<section className="w-full pb-6 container">
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 				<div className="flex flex-col justify-center space-y-4">
 					<div className="space-y-2">
@@ -11,8 +11,8 @@ export default function Hero() {
 							Discover the Best Products for Your Lifestyle
 						</h1>
 						<p className="max-w-[600px] text-muted-foreground md:text-xl">
-							Browse our curated selection of top-quality products and find
-							the perfect fit for your needs.
+							Browse our curated selection of top-quality products
+							and find the perfect fit for your needs.
 						</p>
 					</div>
 					<Link
