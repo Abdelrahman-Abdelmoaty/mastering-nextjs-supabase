@@ -6,21 +6,22 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	apiVersion: "2024-06-20",
 });
 
-export async function GET() {
+export async function POST(request: NextRequest) {
 	try {
+		const cartItems = await request.json();
 		const session = await stripe.checkout.sessions.create({
-			line_items: [
-				{
-					price_data: {
-						currency: "usd",
-						product_data: {
-							name: "T-shirt",
-						},
-						unit_amount: 2000,
+			line_items: cartItems.map((item: any) => ({
+				price_data: {
+					currency: "usd",
+					product_data: {
+						name: item.name,
+						images: [item.image],
+						description: item.description,
 					},
-					quantity: 1,
+					unit_amount: Math.round(item.price * 100),
 				},
-			],
+				quantity: item.quantity,
+			})),
 			mode: "payment",
 			success_url: process.env.NEXT_PUBLIC_URL + "/checkout/success",
 			cancel_url: process.env.NEXT_PUBLIC_URL + "/checkout/cancel",

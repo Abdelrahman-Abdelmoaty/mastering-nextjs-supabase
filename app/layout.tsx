@@ -19,10 +19,12 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className="scroll-smooth">
-			<body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
+			<body
+				className={`${inter.className} antialiased min-h-screen flex flex-col`}
+			>
 				<QueryProvider>
 					<CartProvider>
-						<div className="flex-1 grid">{children}</div>
+						{children}
 						<Toaster richColors />
 					</CartProvider>
 				</QueryProvider>

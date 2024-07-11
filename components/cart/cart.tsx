@@ -13,9 +13,24 @@ import { Button } from "../ui/button";
 import { ShoppingBag, X } from "lucide-react";
 import useCart from "@/contexts/CartProvider";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default function Cart() {
 	const { cartItems, clearCart, removeFromCart, getCartTotal } = useCart();
+
+	const checkout = async () => {
+		try {
+			const response = await fetch("/api/create-checkout-session", {
+				method: "POST",
+				body: JSON.stringify(cartItems),
+			});
+			const { url } = await response.json();
+			window.location = url;
+		} catch (error) {
+			toast.error("An error occurred while checking out");
+		}
+	};
+
 	return (
 		<Sheet>
 			<Button variant="ghost" asChild>
@@ -40,7 +55,10 @@ export default function Cart() {
 				{cartItems?.length > 0 && (
 					<div className="mb-auto my-4 flex flex-col gap-4">
 						{cartItems.map((item) => (
-							<div key={item.id} className="flex gap-2 items-center">
+							<div
+								key={item.id}
+								className="flex gap-2 items-center"
+							>
 								<Image
 									src={item.image}
 									alt={item.name}
@@ -49,9 +67,13 @@ export default function Cart() {
 								/>
 								<div className="flex-1">
 									<p className="font-semibold">{item.name}</p>
-									<p className="text-muted-foreground">${item.price}</p>
+									<p className="text-muted-foreground">
+										${item.price}
+									</p>
 									<div className="flex items-center justify-between">
-										<p className="mr-2">Qty: {item.quantity}</p>
+										<p className="mr-2">
+											Qty: {item.quantity}
+										</p>
 										<Button
 											variant="destructive"
 											size="sm"
@@ -63,13 +85,19 @@ export default function Cart() {
 								</div>
 							</div>
 						))}
+						<div className="flex items-center justify-between w-full mt-4">
+							<p>{cartItems.length} items</p>
+							<Button onClick={clearCart} variant="ghost">
+								Clear Cart
+							</Button>
+						</div>
 					</div>
 				)}
 				{cartItems?.length > 0 && (
 					<SheetFooter>
 						<div className="flex items-center justify-between w-full mt-4">
 							<p>Total: {getCartTotal()}$</p>
-							<Button onClick={clearCart}>Clear Cart</Button>
+							<Button onClick={checkout}>Checkout</Button>
 						</div>
 					</SheetFooter>
 				)}
